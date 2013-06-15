@@ -5,9 +5,7 @@
 #include <boost/thread/mutex.hpp>
 #include <list>
 #include <set>
-#include "Log.h"
-#include "MainWnd.h"
-#include "Singleton.h"
+//#include "Log.h"
 
 
 using namespace boost;
@@ -117,43 +115,17 @@ private:
 
 boost::asio::io_service g_io_service;
 
-void OnInput(LPSTR szString) {
-	if (szString[0] == '@') {
-		if (strcmp(&szString[1],"close") == 0) {
-			g_io_service.stop();
-			g_logger.error("=======Echo is closing...=====");
-		}
-	}
-}
 
-void __stdcall ShowLogFunc(CLogger::Level& level,const char* logtime,const char* pszMsg)
-{
-	stSetListTimeText *cmd = new stSetListTimeText();
-	cmd->dwColor = level.showcolor;
-	strcpy_s(cmd->szMsg,sizeof(cmd->szMsg),pszMsg);
-	strcpy_s(cmd->szTime,sizeof(cmd->szTime),logtime);
-	CWndCtl::getMe().push_back((stBaseCmd*)cmd);
-}
-
-void OnWndClose() {
-	g_io_service.stop();
-	CWndCtl::getMe().SetListViewText("=====IO_SERVICE IS CLOSING...======",RGB(255,0,0));
-}
-
-int _mmain()
+int main()
 {
 	try
 	{
-		CWndCtl::getMe().m_input = OnInput;
-		CWndCtl::getMe().m_OnCloseWndFunc = OnWndClose;
-		g_logger.SetShowLogFunc(ShowLogFunc);
-
 		server s(g_io_service, 27015);
 		g_io_service.run();
 	}
 	catch (std::exception& e)
 	{
-		g_logger.error("exception:%s",e.what());
+		printf("exception:%s",e.what());
 	}
 
 	return 0;

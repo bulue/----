@@ -8,7 +8,6 @@
 #include "syncobj.h"
 #include "Singleton.h"
 #include "network/packet.h"
-#include "cmd.h"
 #include "network/tcpsocket.h"
 #include <set>
 

@@ -144,7 +144,7 @@ void SqlGuiFrame::OnExecuteButtonClick( wxCommandEvent& event )
 			}
 			m_grid2->EndBatch();
 			DWORD dwAutoSizeTime = GetTickCount();
-			m_grid2->AutoSizeColumn(0);
+			m_grid2->AutoSizeColumns();
 			m_statusBar->SetStatusText(wxString::Format("AutoSizeColumnsº∆À„ ±º‰%lf√Î",float(GetTickCount() - dwAutoSizeTime)/1000.0f),3);
 		}else {
 			wxMessageBox(wxString::Format("LastState:%s\nLastError:%s",stmt.LastStateError().c_str(),stmt.LastError().c_str()),
