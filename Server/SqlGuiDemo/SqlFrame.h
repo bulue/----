@@ -27,11 +27,11 @@ private:
 	virtual void OnExecuteButtonClick( wxCommandEvent& event );
 	virtual void OnChoiceDbName( wxCommandEvent& event );
 	virtual void OnChoiseTableName( wxCommandEvent& event );
+	virtual void OnGridCellChanged( wxGridEvent& event );
 
 	void OnCopy(wxCommandEvent &WXUNUSED(event));
 	void OnPaste(wxCommandEvent &WXUNUSED(event));
 	void OnRightMouseDown(wxGridEvent &event); 
-
 public:
 
 	SqlGuiFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 832,573 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );

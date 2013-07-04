@@ -126,6 +126,7 @@ DBDialog::DBDialog( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_ccDbName->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( DBDialog::OnChoiceDbName ), NULL, this );
 	m_ccTableName->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( DBDialog::OnChoiseTableName ), NULL, this );
 	m_button1->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DBDialog::OnExecuteButtonClick ), NULL, this );
+	m_grid2->Connect( wxEVT_GRID_CELL_CHANGE, wxGridEventHandler( DBDialog::OnGridCellChanged ), NULL, this );
 	m_grid2->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( DBDialog::OnRightMouseDown ), NULL, this );
 }
 
@@ -137,6 +138,7 @@ DBDialog::~DBDialog()
 	m_ccDbName->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( DBDialog::OnChoiceDbName ), NULL, this );
 	m_ccTableName->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( DBDialog::OnChoiseTableName ), NULL, this );
 	m_button1->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DBDialog::OnExecuteButtonClick ), NULL, this );
+	m_grid2->Disconnect( wxEVT_GRID_CELL_CHANGE, wxGridEventHandler( DBDialog::OnGridCellChanged ), NULL, this );
 	m_grid2->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( DBDialog::OnRightMouseDown ), NULL, this );
 
 }

@@ -56,6 +56,7 @@ protected:
 	virtual void OnChoiceDbName( wxCommandEvent& event ) { event.Skip(); }
 	virtual void OnChoiseTableName( wxCommandEvent& event ) { event.Skip(); }
 	virtual void OnExecuteButtonClick( wxCommandEvent& event ) { event.Skip(); }
+	virtual void OnGridCellChanged( wxGridEvent& event ) { event.Skip(); }
 	virtual void OnRightMouseDown( wxMouseEvent& event ) { event.Skip(); }
 
 

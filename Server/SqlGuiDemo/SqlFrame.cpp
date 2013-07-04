@@ -29,10 +29,11 @@ std::vector<wxString> __get_lines_from_file(const wxString& _strFileName)
 
 SqlGuiFrame::SqlGuiFrame( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : DBDialog( parent, id, title, pos, size, style )
 {
-
+	SetIcon(wxICON(sqlicon));
+	SetTitle("数据库管理工具");
 	std::vector<wxString> vLine = __get_lines_from_file(wxT("配置文件.ini"));
 	if (!vLine.empty()) {
-		for (int i = 0; i < vLine.size(); ++i) {
+		for (int i = 0; i < (int)vLine.size(); ++i) {
 			m_comboBox1->Append(vLine[i]);
 		}
 		m_comboBox1->SetValue(vLine[0]);
@@ -145,7 +146,7 @@ void SqlGuiFrame::OnExecuteButtonClick( wxCommandEvent& event )
 			m_grid2->EndBatch();
 			DWORD dwAutoSizeTime = GetTickCount();
 			m_grid2->AutoSizeColumns();
-			m_statusBar->SetStatusText(wxString::Format("AutoSizeColumns计算时间%lf秒",float(GetTickCount() - dwAutoSizeTime)/1000.0f),3);
+			m_statusBar->SetStatusText(wxString::Format("调整单元格大小时间%lf秒",float(GetTickCount() - dwAutoSizeTime)/1000.0f),2);
 		}else {
 			wxMessageBox(wxString::Format("LastState:%s\nLastError:%s",stmt.LastStateError().c_str(),stmt.LastError().c_str()),
 				wxT("ODBC ERROR"),wxOK|wxICON_ERROR);
@@ -249,4 +250,48 @@ void SqlGuiFrame::OnRightMouseDown( wxGridEvent &event )
 	pmenuPopUp->Connect(wxID_PASTE,wxEVT_COMMAND_MENU_SELECTED,wxCommandEventHandler(SqlGuiFrame::OnPaste),NULL,this);
 	PopupMenu(pmenuPopUp);
 	delete pmenuPopUp;
+}
+
+void SqlGuiFrame::OnGridCellChanged( wxGridEvent& event )
+{
+	int nCurRow = event.GetRow();
+	int nCurCol = event.GetCol();
+	wxString wsOldString = event.GetString();
+	wxString wsNowString = m_grid2->GetCellValue(nCurRow,nCurCol);
+
+	if (m_odconn.isopen()) {
+		int nNumCol = m_grid2->GetNumberCols();
+
+		//---
+		//拼接Update语句:UPDATE 表名称 SET 列名称 = 新值 WHERE 列名称 = 某值
+		_tstring sTableName = m_ccTableName->GetString(m_ccTableName->GetSelection());
+		_tstring sUpdateCmd;
+		sUpdateCmd += wxT("UPDATE ");
+		sUpdateCmd += sTableName;
+		sUpdateCmd += wxT(" SET ");
+		sUpdateCmd += m_grid2->GetColLabelValue(nCurCol);
+		sUpdateCmd += wxT("=");
+		sUpdateCmd += wxT("\'");
+		sUpdateCmd += m_grid2->GetCellValue(nCurRow,nCurCol);
+		sUpdateCmd += wxT("\'");
+		sUpdateCmd += wxT(" WHERE ");
+		for (int i = 0; i < nNumCol; ++i) {
+			_tstring tmp;
+			tmp += m_grid2->GetColLabelValue(i);
+			tmp += wxT("= ");
+			tmp += wxT("\'");
+			if (nCurCol == i) tmp += wsOldString;
+			else tmp += m_grid2->GetCellValue(nCurRow,i);
+			tmp += wxT("\'");
+			if (i + 1 != nNumCol) tmp += wxT(" and ");
+			sUpdateCmd += tmp;
+		}
+		
+		ODStatement stmt(m_odconn.get_native_dbc_handle());
+		if (!stmt.Execute(sUpdateCmd.c_str())) {
+			wxMessageBox(wxString::Format("LastState:%s\nLastError:%s\n语句:%s",stmt.LastStateError().c_str(),stmt.LastError().c_str(),sUpdateCmd.c_str()),
+				wxT("ODBC STATEMENT ERROR"),wxOK|wxICON_ERROR);
+		}
+	}
+	event.Skip();
 }
