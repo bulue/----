@@ -1,5 +1,5 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "echoServer", "echoServer\echoServer.vcxproj", "{EF9A1221-D0DD-4841-910E-EAA36F85BDA0}"
 EndProject
@@ -13,6 +13,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ShareLibs", "ShareLibs\Shar
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tetris", "tetris\tetris.vcxproj", "{C267F0B1-D803-4AF5-A9D5-05A8BF532367}"
 	ProjectSection(ProjectDependencies) = postProject
+		{8E90A51E-EE48-4274-9383-65E10AFD42F0} = {8E90A51E-EE48-4274-9383-65E10AFD42F0}
 		{3AEC13CA-EA96-41EA-993E-0170FDDD62ED} = {3AEC13CA-EA96-41EA-993E-0170FDDD62ED}
 	EndProjectSection
 EndProject
@@ -26,6 +27,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tetris_comm", "tetris_comm\tetris_comm.vcxproj", "{8E90A51E-EE48-4274-9383-65E10AFD42F0}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LuaSystem", "LuaSystem\LuaSystem.vcxproj", "{AE4433FB-774F-4754-8FFE-6DE31E43157B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wxTmp", "wxTmp\wxTmp.vcxproj", "{897EF451-C937-495E-94E3-0A2BA2A516AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -137,6 +140,16 @@ Global
 		{AE4433FB-774F-4754-8FFE-6DE31E43157B}.Release|Win32.ActiveCfg = Release|Win32
 		{AE4433FB-774F-4754-8FFE-6DE31E43157B}.Release|Win32.Build.0 = Release|Win32
 		{AE4433FB-774F-4754-8FFE-6DE31E43157B}.Release|x86.ActiveCfg = Release|Win32
+		{897EF451-C937-495E-94E3-0A2BA2A516AD}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{897EF451-C937-495E-94E3-0A2BA2A516AD}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{897EF451-C937-495E-94E3-0A2BA2A516AD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{897EF451-C937-495E-94E3-0A2BA2A516AD}.Debug|Win32.Build.0 = Debug|Win32
+		{897EF451-C937-495E-94E3-0A2BA2A516AD}.Debug|x86.ActiveCfg = Debug|Win32
+		{897EF451-C937-495E-94E3-0A2BA2A516AD}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{897EF451-C937-495E-94E3-0A2BA2A516AD}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{897EF451-C937-495E-94E3-0A2BA2A516AD}.Release|Win32.ActiveCfg = Release|Win32
+		{897EF451-C937-495E-94E3-0A2BA2A516AD}.Release|Win32.Build.0 = Release|Win32
+		{897EF451-C937-495E-94E3-0A2BA2A516AD}.Release|x86.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

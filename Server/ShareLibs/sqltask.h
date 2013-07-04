@@ -341,6 +341,7 @@ class ODConnection{
 	bool	 m_bOpen;
 public:
 	ODConnection():m_hev(NULL),m_hdbc(NULL),m_bInit(false),m_bOpen(false){}
+
 	//DRIVER={SQL Server};SERVER=localhost, 1433;DATABASE=dbname;UID=sa;PWD=123456;
 	bool connect(const TCHAR* szDBInfo,TCHAR * szConnOut = 0,unsigned int nOutLen = 0) {
 		SQLRETURN retcode;

@@ -28,7 +28,6 @@ void TetrisEngine::Run()
 {
 	boost::thread thread(boost::bind(&io_service::run,&io_s));
 
-
 	while (true) {
 		ProcessUserMsg();
 		ProcessTimer();
@@ -52,6 +51,7 @@ void TetrisEngine::ProcessUserMsg()
 			for (it = pUser->m_lmsg.begin();it != pUser->m_lmsg.end(); ++it){
 				stBaseMessage* pMsg = *it;
 				pUser->DoUserCmd((stBaseCmd*)pMsg->body(),pMsg->bodylen());	
+				delete pMsg;
 			}
 			pUser->m_lmsg.clear();
 		}
