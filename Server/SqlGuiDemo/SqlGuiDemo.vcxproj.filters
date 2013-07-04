@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="wxSqlGui_main.cpp" />
+    <ClCompile Include="DBDialog.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="SqlFrame.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DBDialog.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="SqlFrame.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="UI">
+      <UniqueIdentifier>{9ece36d8-fb3b-4f3d-b0eb-2f4c089b75ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logic">
+      <UniqueIdentifier>{44fd91bb-1baf-4807-9cf7-2bf94cfcb9e4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SqlGuiDemo.rc" />
+  </ItemGroup>
+</Project>
