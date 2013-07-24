@@ -32,10 +32,11 @@ wxTmpFrame::wxTmpFrame( wxWindow* parent, wxWindowID id, const wxString& title, 
 
 	bSizer39->Add( bSizer6, 0, wxEXPAND, 5 );
 
-	m_splitter7 = new wxSplitterWindow( m_panel35, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_3D|wxSP_NO_XP_THEME|wxSP_PERMIT_UNSPLIT );
-	m_splitter7->Connect( wxEVT_IDLE, wxIdleEventHandler( wxTmpFrame::m_splitter7OnIdle ), NULL, this );
+	m_panel5 = new wxPanel( m_panel35, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer8;
+	bSizer8 = new wxBoxSizer( wxHORIZONTAL );
 
-	m_panel36 = new wxPanel( m_splitter7, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	m_panel36 = new wxPanel( m_panel5, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer40;
 	bSizer40 = new wxBoxSizer( wxVERTICAL );
 
@@ -46,7 +47,9 @@ wxTmpFrame::wxTmpFrame( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_panel36->SetSizer( bSizer40 );
 	m_panel36->Layout();
 	bSizer40->Fit( m_panel36 );
-	m_panel37 = new wxPanel( m_splitter7, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	bSizer8->Add( m_panel36, 1, wxEXPAND | wxALL, 5 );
+
+	m_panel37 = new wxPanel( m_panel5, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer41;
 	bSizer41 = new wxBoxSizer( wxVERTICAL );
 
@@ -58,8 +61,13 @@ wxTmpFrame::wxTmpFrame( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_panel37->SetSizer( bSizer41 );
 	m_panel37->Layout();
 	bSizer41->Fit( m_panel37 );
-	m_splitter7->SplitVertically( m_panel36, m_panel37, 219 );
-	bSizer39->Add( m_splitter7, 1, wxEXPAND, 5 );
+	bSizer8->Add( m_panel37, 1, wxEXPAND | wxALL, 5 );
+
+
+	m_panel5->SetSizer( bSizer8 );
+	m_panel5->Layout();
+	bSizer8->Fit( m_panel5 );
+	bSizer39->Add( m_panel5, 1, wxEXPAND | wxALL, 5 );
 
 
 	m_panel35->SetSizer( bSizer39 );
@@ -97,7 +105,7 @@ DBTableBasePanel::DBTableBasePanel( wxWindow* parent, wxWindowID id, const wxPoi
 	wxBoxSizer* bSizer8;
 	bSizer8 = new wxBoxSizer( wxHORIZONTAL );
 
-	m_DBStyledTextCtrl = new wxStyledTextCtrl( this, wxID_ANY);
+	m_DBStyledTextCtrl = new wxStyledTextCtrl( this, wxID_ANY,  wxDefaultPosition);
 	bSizer8->Add( m_DBStyledTextCtrl, 1, wxALL, 5 );
 
 	m_ExcuteBtn = new wxButton( this, wxID_ANY, wxT("Ö´ÐÐ"), wxDefaultPosition, wxDefaultSize, 0 );

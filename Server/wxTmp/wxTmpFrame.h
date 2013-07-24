@@ -21,7 +21,6 @@
 #include <wx/treectrl.h>
 #include <wx/panel.h>
 #include <wx/aui/auibook.h>
-#include <wx/splitter.h>
 #include <wx/statusbr.h>
 #include <wx/frame.h>
 #include <wx/textctrl.h>
@@ -41,7 +40,7 @@ protected:
 	wxPanel* m_panel35;
 	wxComboBox* m_comboBox1;
 	wxButton* m_ConnBtn;
-	wxSplitterWindow* m_splitter7;
+	wxPanel* m_panel5;
 	wxPanel* m_panel36;
 	wxTreeCtrl* m_DBTreeCtrl;
 	wxPanel* m_panel37;
@@ -59,12 +58,6 @@ public:
 	wxTmpFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 840,608 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 
 	~wxTmpFrame();
-
-	void m_splitter7OnIdle( wxIdleEvent& )
-	{
-		m_splitter7->SetSashPosition( 219 );
-		m_splitter7->Disconnect( wxEVT_IDLE, wxIdleEventHandler( wxTmpFrame::m_splitter7OnIdle ), NULL, this );
-	}
 
 };
 
