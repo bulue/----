@@ -1,6 +1,7 @@
 #ifndef __SQLTOOLFRAME_H__ 
 #define __SQLTOOLFRAME_H__
 
+class SqlToolFrame;
 
 #include "wxTmpFrame.h"
 #include <sqltask.h>
@@ -15,7 +16,14 @@ public:
 	virtual void OnConnectBtnClk( wxCommandEvent& event );
 	virtual void OnDBTreeItemActivate( wxTreeEvent& event );
 	virtual void OnDBTreeItemExpanding( wxTreeEvent& event );
-
+	virtual void OnExcuteBtnClk( wxCommandEvent& event );
+	virtual void OnMenuViewConnectPane( wxCommandEvent& event );
+	virtual void OnNewPageAddClk( wxCommandEvent& event );
+	virtual void OnShowDBTreePane( wxCommandEvent& event );
+	virtual void OnDBBookPageChanged( wxAuiNotebookEvent& event );
+	virtual void OnDBComBoxChanged( wxCommandEvent& event );
+	virtual void OnMenuExcuteBarSel( wxCommandEvent& event );
+	virtual void OnMenuConnectBarSel( wxCommandEvent& event );
 private:
 	wxAuiManager m_mgr;
 };
@@ -39,12 +47,14 @@ class DBTablePanel:public DBTableBasePanel
 {
 public:
 	wxString m_DBName;
+	wxStyledTextCtrl* m_DBStyledTextCtrl;
 	vector<wxString> m_AutoCompTips;	//×Ô¶¯²¹Æë´úÂë
-	virtual void OnExcuteBtnClk( wxCommandEvent& event );
 	virtual void OnHotspotClk(wxStyledTextEvent& event);
 	virtual void OnCallTipClk(wxStyledTextEvent& event);
 	virtual void OnAutoCompSelection(wxStyledTextEvent& event);
 	virtual void OnCharAdded(wxStyledTextEvent& event);
+
+	void OnExcuteBtnClk();
 
 	DBTablePanel( wxWindow* parent, 
 		wxWindowID id = wxID_ANY, 

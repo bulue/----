@@ -11,43 +11,90 @@
 
 wxTmpFrame::wxTmpFrame( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
 {
-	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	this->SetSizeHints( wxSize( 300,400 ), wxDefaultSize );
+
+	m_menubar1 = new wxMenuBar( 0 );
+	m_menu3 = new wxMenu();
+	wxMenuItem* m_menuItem4;
+	m_menuItem4 = new wxMenuItem( m_menu3, Menu_NewPage, wxString( wxT("新建查询") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menu3->Append( m_menuItem4 );
+
+	m_menubar1->Append( m_menu3, wxT("文件") ); 
+
+	m_ViewMenu = new wxMenu();
+	wxMenuItem* m_menuItem3;
+	m_menuItem3 = new wxMenuItem( m_ViewMenu, Menu_ConnectView, wxString( wxT("查询工具条") ) , wxEmptyString, wxITEM_NORMAL );
+	m_ViewMenu->Append( m_menuItem3 );
+
+	wxMenuItem* m_menuItem6;
+	m_menuItem6 = new wxMenuItem( m_ViewMenu, Menu_ExcuteBar, wxString( wxT("执行工具条") ) , wxEmptyString, wxITEM_NORMAL );
+	m_ViewMenu->Append( m_menuItem6 );
+
+	m_ViewMenu->AppendSeparator();
+
+	wxMenuItem* m_menuItem5;
+	m_menuItem5 = new wxMenuItem( m_ViewMenu, Menu_ConnectObj, wxString( wxT("连接对象管理器") ) , wxEmptyString, wxITEM_NORMAL );
+	m_ViewMenu->Append( m_menuItem5 );
+
+	m_menubar1->Append( m_ViewMenu, wxT("视图") ); 
+
+	this->SetMenuBar( m_menubar1 );
 
 	wxBoxSizer* bSizer32;
 	bSizer32 = new wxBoxSizer( wxVERTICAL );
 
-	m_panel35 = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxBoxSizer* bSizer39;
-	bSizer39 = new wxBoxSizer( wxVERTICAL );
-
-	wxBoxSizer* bSizer6;
-	bSizer6 = new wxBoxSizer( wxHORIZONTAL );
-
-	m_comboBox1 = new wxComboBox( m_panel35, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
-	bSizer6->Add( m_comboBox1, 1, wxALL, 5 );
-
-	m_ConnBtn = new wxButton( m_panel35, wxID_ANY, wxT("连接"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer6->Add( m_ConnBtn, 0, wxALL, 5 );
-
-
-	bSizer39->Add( bSizer6, 0, wxEXPAND, 5 );
-
-	m_panel5 = new wxPanel( m_panel35, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	m_panel5 = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer8;
-	bSizer8 = new wxBoxSizer( wxHORIZONTAL );
+	bSizer8 = new wxBoxSizer( wxVERTICAL );
 
-	m_panel36 = new wxPanel( m_panel5, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	m_auiToolBar3 = new wxAuiToolBar( m_panel5, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxAUI_TB_HORZ_LAYOUT|wxAUI_TB_OVERFLOW ); 
+	m_comboBox1 = new wxComboBox( m_auiToolBar3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	m_comboBox1->SetMinSize( wxSize( 500,-1 ) );
+
+	m_auiToolBar3->AddControl( m_comboBox1 );
+	m_ConnBtn = new wxButton( m_auiToolBar3, wxID_ANY, wxT("连接"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_auiToolBar3->AddControl( m_ConnBtn );
+	m_auiToolBar3->AddSeparator(); 
+
+	m_auiToolBar3->AddTool( wxID_ANY, wxT("tool"), wxArtProvider::GetBitmap( wxART_CDROM, wxART_TOOLBAR ), wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString, NULL ); 
+
+	m_auiToolBar3->AddTool( wxID_ANY, wxT("tool"), wxArtProvider::GetBitmap( wxART_COPY, wxART_TOOLBAR ), wxNullBitmap, wxITEM_NORMAL, wxT("拷贝"), wxEmptyString, NULL ); 
+
+	m_auiToolBar3->AddTool( wxID_ANY, wxT("tool"), wxArtProvider::GetBitmap( wxART_PASTE, wxART_TOOLBAR ), wxNullBitmap, wxITEM_NORMAL, wxT("黏贴"), wxEmptyString, NULL ); 
+
+	m_auiToolBar3->AddTool( wxID_ANY, wxT("tool"), wxArtProvider::GetBitmap( wxART_TIP, wxART_TOOLBAR ), wxNullBitmap, wxITEM_NORMAL, wxT("提示消息"), wxEmptyString, NULL ); 
+
+	m_auiToolBar3->Realize(); 
+
+	bSizer8->Add( m_auiToolBar3, 0, wxALL, 5 );
+
+	m_excutetoolbar = new wxAuiToolBar( m_panel5, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxAUI_TB_HORZ_LAYOUT|wxAUI_TB_OVERFLOW ); 
+	m_DBNameCB = new wxComboBox( m_excutetoolbar, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	m_DBNameCB->SetMinSize( wxSize( 200,-1 ) );
+
+	m_excutetoolbar->AddControl( m_DBNameCB );
+	m_ExcuteBtn = new wxButton( m_excutetoolbar, wxID_ANY, wxT("执行"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_excutetoolbar->AddControl( m_ExcuteBtn );
+	m_excutetoolbar->AddSeparator(); 
+
+	m_excutetoolbar->AddTool( Menu_AddNewPage, wxT("tool"), wxArtProvider::GetBitmap( wxART_FILE_OPEN, wxART_TOOLBAR ), wxNullBitmap, wxITEM_NORMAL, wxT("新建查询"), wxEmptyString, NULL ); 
+
+	m_excutetoolbar->Realize(); 
+
+	bSizer8->Add( m_excutetoolbar, 0, wxALL, 5 );
+
+	m_DBTreePane = new wxPanel( m_panel5, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer40;
 	bSizer40 = new wxBoxSizer( wxVERTICAL );
 
-	m_DBTreeCtrl = new wxTreeCtrl( m_panel36, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTR_DEFAULT_STYLE );
+	m_DBTreeCtrl = new wxTreeCtrl( m_DBTreePane, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTR_DEFAULT_STYLE );
 	bSizer40->Add( m_DBTreeCtrl, 1, wxALL|wxEXPAND, 5 );
 
 
-	m_panel36->SetSizer( bSizer40 );
-	m_panel36->Layout();
-	bSizer40->Fit( m_panel36 );
-	bSizer8->Add( m_panel36, 1, wxEXPAND | wxALL, 5 );
+	m_DBTreePane->SetSizer( bSizer40 );
+	m_DBTreePane->Layout();
+	bSizer40->Fit( m_DBTreePane );
+	bSizer8->Add( m_DBTreePane, 1, wxEXPAND | wxALL, 5 );
 
 	m_panel37 = new wxPanel( m_panel5, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer41;
@@ -67,13 +114,7 @@ wxTmpFrame::wxTmpFrame( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_panel5->SetSizer( bSizer8 );
 	m_panel5->Layout();
 	bSizer8->Fit( m_panel5 );
-	bSizer39->Add( m_panel5, 1, wxEXPAND | wxALL, 5 );
-
-
-	m_panel35->SetSizer( bSizer39 );
-	m_panel35->Layout();
-	bSizer39->Fit( m_panel35 );
-	bSizer32->Add( m_panel35, 1, wxEXPAND, 5 );
+	bSizer32->Add( m_panel5, 1, wxEXPAND, 5 );
 
 
 	this->SetSizer( bSizer32 );
@@ -83,17 +124,33 @@ wxTmpFrame::wxTmpFrame( wxWindow* parent, wxWindowID id, const wxString& title, 
 	this->Centre( wxBOTH );
 
 	// Connect Events
+	this->Connect( m_menuItem4->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( wxTmpFrame::OnNewPageAddClk ) );
+	this->Connect( m_menuItem3->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( wxTmpFrame::OnMenuConnectBarSel ) );
+	this->Connect( m_menuItem6->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( wxTmpFrame::OnMenuExcuteBarSel ) );
+	this->Connect( m_menuItem5->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( wxTmpFrame::OnShowDBTreePane ) );
 	m_ConnBtn->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxTmpFrame::OnConnectBtnClk ), NULL, this );
+	m_DBNameCB->Connect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( wxTmpFrame::OnDBComBoxChanged ), NULL, this );
+	m_ExcuteBtn->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxTmpFrame::OnExcuteBtnClk ), NULL, this );
+	this->Connect( Menu_AddNewPage, wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( wxTmpFrame::OnNewPageAddClk ) );
 	m_DBTreeCtrl->Connect( wxEVT_COMMAND_TREE_ITEM_ACTIVATED, wxTreeEventHandler( wxTmpFrame::OnDBTreeItemActivate ), NULL, this );
 	m_DBTreeCtrl->Connect( wxEVT_COMMAND_TREE_ITEM_EXPANDING, wxTreeEventHandler( wxTmpFrame::OnDBTreeItemExpanding ), NULL, this );
+	m_DBTablebook->Connect( wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGED, wxAuiNotebookEventHandler( wxTmpFrame::OnDBBookPageChanged ), NULL, this );
 }
 
 wxTmpFrame::~wxTmpFrame()
 {
 	// Disconnect Events
+	this->Disconnect( Menu_NewPage, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( wxTmpFrame::OnNewPageAddClk ) );
+	this->Disconnect( Menu_ConnectView, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( wxTmpFrame::OnMenuConnectBarSel ) );
+	this->Disconnect( Menu_ExcuteBar, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( wxTmpFrame::OnMenuExcuteBarSel ) );
+	this->Disconnect( Menu_ConnectObj, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( wxTmpFrame::OnShowDBTreePane ) );
 	m_ConnBtn->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxTmpFrame::OnConnectBtnClk ), NULL, this );
+	m_DBNameCB->Disconnect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( wxTmpFrame::OnDBComBoxChanged ), NULL, this );
+	m_ExcuteBtn->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxTmpFrame::OnExcuteBtnClk ), NULL, this );
+	this->Disconnect( Menu_AddNewPage, wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( wxTmpFrame::OnNewPageAddClk ) );
 	m_DBTreeCtrl->Disconnect( wxEVT_COMMAND_TREE_ITEM_ACTIVATED, wxTreeEventHandler( wxTmpFrame::OnDBTreeItemActivate ), NULL, this );
 	m_DBTreeCtrl->Disconnect( wxEVT_COMMAND_TREE_ITEM_EXPANDING, wxTreeEventHandler( wxTmpFrame::OnDBTreeItemExpanding ), NULL, this );
+	m_DBTablebook->Disconnect( wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGED, wxAuiNotebookEventHandler( wxTmpFrame::OnDBBookPageChanged ), NULL, this );
 
 }
 
@@ -104,12 +161,6 @@ DBTableBasePanel::DBTableBasePanel( wxWindow* parent, wxWindowID id, const wxPoi
 
 	wxBoxSizer* bSizer8;
 	bSizer8 = new wxBoxSizer( wxHORIZONTAL );
-
-	m_DBStyledTextCtrl = new wxStyledTextCtrl( this, wxID_ANY,  wxDefaultPosition);
-	bSizer8->Add( m_DBStyledTextCtrl, 1, wxALL, 5 );
-
-	m_ExcuteBtn = new wxButton( this, wxID_ANY, wxT("执行"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer8->Add( m_ExcuteBtn, 0, wxALL, 5 );
 
 
 	bSizer7->Add( bSizer8, 0, wxEXPAND, 5 );
@@ -143,14 +194,8 @@ DBTableBasePanel::DBTableBasePanel( wxWindow* parent, wxWindowID id, const wxPoi
 
 	this->SetSizer( bSizer7 );
 	this->Layout();
-
-	// Connect Events
-	m_ExcuteBtn->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DBTableBasePanel::OnExcuteBtnClk ), NULL, this );
 }
 
 DBTableBasePanel::~DBTableBasePanel()
 {
-	// Disconnect Events
-	m_ExcuteBtn->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DBTableBasePanel::OnExcuteBtnClk ), NULL, this );
-
 }

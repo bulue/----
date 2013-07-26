@@ -3,6 +3,7 @@
 #include <wx/imaglist.h>
 #include <wx/textfile.h>
 #include <wx/msgdlg.h>
+#include <wx/app.h>
 
 std::vector<wxString> __get_lines_from_file(const wxString& _strFileName)
 {
@@ -25,11 +26,15 @@ SqlToolFrame::SqlToolFrame( wxWindow* parent ):wxTmpFrame(parent)
 	SetIcon(wxIcon(wxICON(sqlicon)));
 	SetTitle(wxT("数据库工具-2"));
 	wxImageList* pImageList = new wxImageList(20,20);
-	pImageList->Add(wxBITMAP(folder_bmp1));
-	pImageList->Add(wxBITMAP(folder_bmp2));
+	//pImageList->Add(wxBITMAP(folder_bmp1));
+	//pImageList->Add(wxBITMAP(folder_bmp2));
+	//pImageList->Add(wxBITMAP(table_bmp));
+	pImageList->Add(wxArtProvider::GetBitmap( wxART_FOLDER, wxART_OTHER ));
+	pImageList->Add(wxArtProvider::GetBitmap( wxART_FOLDER_OPEN, wxART_OTHER ));
 	pImageList->Add(wxBITMAP(table_bmp));
+	pImageList->Add(wxArtProvider::GetBitmap( wxART_GO_HOME, wxART_OTHER ));
 
-	wxTreeItemId treeroot1 = m_DBTreeCtrl->AddRoot(wxT(""));
+	wxTreeItemId treeroot1 = m_DBTreeCtrl->AddRoot(wxT("DataManager"),3);
 	m_DBTreeCtrl->AssignImageList(pImageList);
 
 	std::vector<wxString> vLine = __get_lines_from_file(wxT("配置文件.ini"));
@@ -47,8 +52,19 @@ SqlToolFrame::SqlToolFrame( wxWindow* parent ):wxTmpFrame(parent)
 	//m_DBTablebook->SetArtProvider(pTabArt);
 
 	m_mgr.SetManagedWindow(m_panel5);
-	m_mgr.AddPane(m_panel36, wxLEFT, wxT("对象资源管理器"));
-	m_mgr.AddPane(m_panel37,wxCENTER);
+	m_mgr.AddPane(m_DBTreePane, wxAuiPaneInfo().
+		Name(wxT("tb4")).Caption(wxT("对象资源管理器")).Left());
+	m_mgr.AddPane(m_panel37,wxAuiPaneInfo().CenterPane());
+	m_mgr.AddPane(m_auiToolBar3,wxAuiPaneInfo().
+		Name(wxT("m_auiToolBar3")).ToolbarPane().Top().
+		LeftDockable(false).
+		RightDockable(false).
+		BottomDockable(false));
+	m_mgr.AddPane(m_excutetoolbar,wxAuiPaneInfo().
+		Name(wxT("m_excutetoolbar")).ToolbarPane().Top().
+		LeftDockable(false).
+		RightDockable(false).
+		BottomDockable(false));
 	m_mgr.Update();
 }
 
@@ -65,8 +81,10 @@ void SqlToolFrame::OnConnectBtnClk( wxCommandEvent& event )
 		}
 		for (int i = 0; i < (int)vDbName.size(); ++i) {
 			m_DBTreeCtrl->AppendItem(root,vDbName[i],0,1,new DBTreeData(_DBDATA_DB_));
+			m_DBNameCB->Append(vDbName[i]);
 		}
 		m_DBTreeCtrl->ExpandAllChildren(root);
+		if (!vDbName.empty()) m_DBNameCB->SetValue(vDbName[0]);
 	}
 	event.Skip();
 }
@@ -76,6 +94,7 @@ void SqlToolFrame::OnDBTreeItemActivate( wxTreeEvent& event )
 	wxTreeItemId itemid = event.GetItem();
 	wxString wsItemName =  m_DBTreeCtrl->GetItemText(itemid);
 	DBTreeData* pDbData = (DBTreeData*)m_DBTreeCtrl->GetItemData(itemid);
+	if (!pDbData) return;
 	if (pDbData->nType == _DBDATA_DB_) {
 		_vstring vTbName = ToolEngine::getMe().m_DBConn.GetDataTableName(wsItemName.t_str());
 
@@ -95,7 +114,9 @@ void SqlToolFrame::OnDBTreeItemActivate( wxTreeEvent& event )
 			wxMessageBox(wxString::Format("LastState:%s\nLastError:%s",stmt.LastStateError().c_str(),stmt.LastError().c_str()),wxT("ODBC ERROR"),wxOK|wxICON_ERROR);
 		}
 		_vstring vColName = ToolEngine::getMe().m_DBConn.GetColumnName(wsItemName.t_str());
-		newPanel->m_DBName = wxString::Format("USE %s\n",wsDbName.t_str());
+		//newPanel->m_DBName = wxString::Format("USE %s\n",wsDbName.t_str());
+		newPanel->m_DBName = wsDbName;
+		m_DBNameCB->SetValue(wsDbName);
 		for (size_t i = 0; i < vColName.size(); ++i) {
 			newPanel->m_AutoCompTips.push_back(vColName[i]);
 		}
@@ -125,11 +146,80 @@ void SqlToolFrame::OnDBTreeItemExpanding( wxTreeEvent& event )
 	event.Skip();
 }
 
+void SqlToolFrame::OnExcuteBtnClk( wxCommandEvent& event )
+{
+	DBTablePanel* curPanel = (DBTablePanel*)m_DBTablebook->GetCurrentPage();
+	if (curPanel) {
+		curPanel->OnExcuteBtnClk();
+	}
+	event.Skip();
+}
+
+void SqlToolFrame::OnMenuViewConnectPane( wxCommandEvent& event )
+{
+	m_mgr.GetPane(m_auiToolBar3).Show(true);
+	m_mgr.Update();
+	event.Skip();
+}
+
+void SqlToolFrame::OnNewPageAddClk( wxCommandEvent& event )
+{
+	static int index = 1;
+	DBTablePanel* newPanel = new DBTablePanel(m_DBTablebook,wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	m_DBTablebook->AddPage(newPanel,wxString::Format("新查询%d",index++));
+	event.Skip();
+}
+
+void SqlToolFrame::OnShowDBTreePane( wxCommandEvent& event )
+{
+	m_mgr.GetPane(m_DBTreePane).Show(true);
+	m_mgr.Update();
+	event.Skip();
+}
+
+void SqlToolFrame::OnDBBookPageChanged( wxAuiNotebookEvent& event )
+{
+	DBTablePanel* pane = (DBTablePanel*)m_DBTablebook->GetCurrentPage();
+	if (pane) {
+		m_DBNameCB->SetValue(pane->m_DBName);	
+	}else
+		m_DBNameCB->SetValue(wxT(""));
+	event.Skip();
+}
+
+void SqlToolFrame::OnDBComBoxChanged( wxCommandEvent& event )
+{
+	DBTablePanel* pane = (DBTablePanel*)m_DBTablebook->GetCurrentPage();
+	if (pane) {
+		pane->m_DBName = m_DBNameCB->GetValue();
+	}
+	event.Skip();
+}
+
+void SqlToolFrame::OnMenuExcuteBarSel( wxCommandEvent& event )
+{
+	m_mgr.GetPane(m_excutetoolbar).Show(true);
+	m_mgr.Update();
+	event.Skip();
+}
+
+void SqlToolFrame::OnMenuConnectBarSel( wxCommandEvent& event )
+{
+	m_mgr.GetPane(m_auiToolBar3).Show(true);
+	m_mgr.Update();
+	event.Skip();
+}
+
 
 //=============================DBTablePanel==================================
 
-void DBTablePanel::OnExcuteBtnClk( wxCommandEvent& event )
+void DBTablePanel::OnExcuteBtnClk()
 {
+	wxAuiPaneInfo& paneinfo = m_mgr.GetPane(m_grid);
+	if (paneinfo.IsOk()&&!paneinfo.IsShown()) {
+		paneinfo.Show(true);
+		m_mgr.Update();
+	}
 	int nGridCols = m_grid->GetNumberCols();
 	int nGridRows = m_grid->GetNumberRows();
 	if (nGridCols) m_grid->DeleteCols(0,nGridCols);
@@ -140,8 +230,9 @@ void DBTablePanel::OnExcuteBtnClk( wxCommandEvent& event )
 
 		wxString ws = m_DBStyledTextCtrl->GetStringSelection();
 		if (ws.empty()) ws = m_DBStyledTextCtrl->GetValue();
-		if (stmt.Execute(m_DBName) && stmt.Execute(ws)) {
-
+		wxString statement =m_DBName.empty()? wxT(""):wxString::Format("USE %s",m_DBName);
+		
+		if ( (statement.empty() || stmt.Execute(statement)) && stmt.Execute(ws)) {
 			ODResultSet set = stmt.GetResultSet();
 			int nSetCols = set.CountCols();
 			m_grid->InsertCols(0,nSetCols);
@@ -168,7 +259,6 @@ void DBTablePanel::OnExcuteBtnClk( wxCommandEvent& event )
 			wxMessageBox(wxString::Format("LastState:%s\nLastError:%s",stmt.LastStateError().c_str(),stmt.LastError().c_str()),wxT("ODBC ERROR"),wxOK|wxICON_ERROR);
 		}
 	}
-	event.Skip();
 }
 
 DBTablePanel::DBTablePanel( wxWindow* parent, wxWindowID id /*= wxID_ANY*/, const wxPoint& pos /*= wxDefaultPosition*/, const wxSize& size /*= wxDefaultSize*/, long style /*= wxTAB_TRAVERSAL */ ) :DBTableBasePanel(parent,id,pos,size,style)
@@ -177,7 +267,7 @@ DBTablePanel::DBTablePanel( wxWindow* parent, wxWindowID id /*= wxID_ANY*/, cons
 	//m_DBStyledTextCtrl->StyleSetForeground (wxSTC_STYLE_LINENUMBER, wxColour (75, 75, 75) );
 	//m_DBStyledTextCtrl->StyleSetBackground (wxSTC_STYLE_LINENUMBER, wxColour (220, 220, 220));
 	//m_DBStyledTextCtrl->SetMarginType (MARGIN_LINE_NUMBERS, wxSTC_MARGIN_RTEXT);
-
+	m_DBStyledTextCtrl = new wxStyledTextCtrl( this, wxID_ANY,  wxDefaultPosition);
 	m_DBStyledTextCtrl->SetWrapMode (wxSTC_WRAP_WORD);
 
 	m_DBStyledTextCtrl->SetLexer(wxSTC_LEX_SQL);
@@ -233,8 +323,6 @@ DBTablePanel::DBTablePanel( wxWindow* parent, wxWindowID id /*= wxID_ANY*/, cons
 		Name(wxT("m_DBStyledTextCtrl")).Center().Floatable(false).CloseButton(false));
 	m_mgr.AddPane(m_grid,wxAuiPaneInfo().
 		Name(wxT("m_grid")).Center());
-	m_mgr.AddPane(m_ExcuteBtn,wxAuiPaneInfo().
-		Name(wxT("m_ExcuteBtn")).Center().Floatable(false).CloseButton(false));
 	m_mgr.Update();
 }
 

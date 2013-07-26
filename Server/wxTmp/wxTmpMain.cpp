@@ -23,5 +23,6 @@ bool MyApp::OnInit()
 #endif
 	SqlToolFrame* frame = new SqlToolFrame(NULL);
 	frame->Show(true);
+	SetTopWindow(frame);
 	return true;
 }
