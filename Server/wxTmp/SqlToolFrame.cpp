@@ -31,7 +31,7 @@ SqlToolFrame::SqlToolFrame( wxWindow* parent ):wxTmpFrame(parent)
 	//pImageList->Add(wxBITMAP(table_bmp));
 	pImageList->Add(wxArtProvider::GetBitmap( wxART_FOLDER, wxART_OTHER ));
 	pImageList->Add(wxArtProvider::GetBitmap( wxART_FOLDER_OPEN, wxART_OTHER ));
-	pImageList->Add(wxBITMAP(table_bmp));
+	pImageList->Add(wxArtProvider::GetBitmap( wxART_REPORT_VIEW, wxART_TOOLBAR ));
 	pImageList->Add(wxArtProvider::GetBitmap( wxART_GO_HOME, wxART_OTHER ));
 
 	wxTreeItemId treeroot1 = m_DBTreeCtrl->AddRoot(wxT("DataManager"),3);
@@ -157,7 +157,8 @@ void SqlToolFrame::OnExcuteBtnClk( wxCommandEvent& event )
 
 void SqlToolFrame::OnMenuViewConnectPane( wxCommandEvent& event )
 {
-	m_mgr.GetPane(m_auiToolBar3).Show(true);
+	bool boShow = m_mgr.GetPane(m_auiToolBar3).IsShown();
+	m_mgr.GetPane(m_auiToolBar3).Show(!boShow);
 	m_mgr.Update();
 	event.Skip();
 }
@@ -172,7 +173,8 @@ void SqlToolFrame::OnNewPageAddClk( wxCommandEvent& event )
 
 void SqlToolFrame::OnShowDBTreePane( wxCommandEvent& event )
 {
-	m_mgr.GetPane(m_DBTreePane).Show(true);
+	bool boShow = m_mgr.GetPane(m_DBTreePane).IsShown();
+	m_mgr.GetPane(m_DBTreePane).Show(!boShow);
 	m_mgr.Update();
 	event.Skip();
 }
@@ -198,14 +200,16 @@ void SqlToolFrame::OnDBComBoxChanged( wxCommandEvent& event )
 
 void SqlToolFrame::OnMenuExcuteBarSel( wxCommandEvent& event )
 {
-	m_mgr.GetPane(m_excutetoolbar).Show(true);
+	bool boShow = m_mgr.GetPane(m_excutetoolbar).IsShown();
+	m_mgr.GetPane(m_excutetoolbar).Show(!boShow);
 	m_mgr.Update();
 	event.Skip();
 }
 
 void SqlToolFrame::OnMenuConnectBarSel( wxCommandEvent& event )
 {
-	m_mgr.GetPane(m_auiToolBar3).Show(true);
+	bool boShow = m_mgr.GetPane(m_auiToolBar3).IsShown();
+	m_mgr.GetPane(m_auiToolBar3).Show(!boShow);
 	m_mgr.Update();
 	event.Skip();
 }
