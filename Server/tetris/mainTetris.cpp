@@ -28,7 +28,7 @@ IMPLEMENT_APP(MyApp)
 
 	CClientSession* clientsession = new CClientSession();
 	if(clientsession){
-		clientsession->async_connect("127.0.0.1",6112);
+		clientsession->async_connect("172.16.3.155",6112);
 	}
 	CltTetrisEngine::getMe().m_WorkThreads.push_back(boost::thread(boost::bind(&io_service::run,&CltTetrisEngine::getMe().io_s)));
 	CltTetrisEngine::getMe().m_WorkThreads.push_back(boost::thread(boost::bind(&CltTetrisEngine::Run,&CltTetrisEngine::getMe())));
